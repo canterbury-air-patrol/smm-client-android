@@ -70,7 +70,9 @@ class MainActivity : ComponentActivity() {
                             singleLine = true
                         )
                         Button(onClick = {
-                            startActivity(Intent(this@MainActivity, AssetSelectorActivity::class.java))
+                            var intent = Intent(this@MainActivity, AssetSelectorActivity::class.java)
+                            intent.putExtra("connectionDetails", connectionDetails)
+                            startActivity(intent)
                         }) {
                             Text(stringResource(id = R.string.connect))
                         }
