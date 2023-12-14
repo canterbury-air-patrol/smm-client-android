@@ -68,4 +68,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["retrofit_version"]}")
+    implementation("com.squareup.retrofit2:converter-gson:${rootProject.extra["retrofit_version"]}")
+    implementation("com.squareup.okhttp3:okhttp:${rootProject.extra["okhttp_version"]}")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:${rootProject.extra["okhttp_version"]}")
 }

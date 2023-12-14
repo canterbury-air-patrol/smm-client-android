@@ -2,6 +2,7 @@
 buildscript {
     extra.apply {
         set("retrofit_version", "2.9.0")
+        set("okhttp_version", "4.12.0")
     }
 }
 
