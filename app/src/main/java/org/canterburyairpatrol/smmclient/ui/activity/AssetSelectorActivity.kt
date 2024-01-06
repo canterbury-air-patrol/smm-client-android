@@ -54,7 +54,7 @@ class AssetSelectorActivity : ComponentActivity() {
     @Composable
     fun AssetListItem(asset: SMMAsset) {
         ListItem(
-            headlineText = { Text(asset.name) },
+            headlineContent = { Text(asset.name) },
             modifier = Modifier.fillMaxWidth()
         )
     }
