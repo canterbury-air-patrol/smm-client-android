@@ -1,8 +1,10 @@
 package org.canterburyairpatrol.smmclient.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -55,10 +57,10 @@ class AssetSelectorActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun AssetListItem(asset: SMMAsset) {
+    fun AssetListItem(asset: SMMAsset, modifier: Modifier) {
         ListItem(
             headlineContent = { Text(asset.name) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
         )
     }
     @Composable
@@ -72,7 +74,13 @@ class AssetSelectorActivity : ComponentActivity() {
 
         LazyColumn {
             items(assetList) { asset ->
-                AssetListItem(asset = asset)
+                AssetListItem(asset = asset,
+                    modifier = Modifier.clickable {
+                        var intent = Intent(this@AssetSelectorActivity, AssetActivity::class.java)
+                        intent.putExtra("connectionDetails", connectionDetails)
+                        intent.putExtra("assetDetails", asset)
+                        startActivity(intent)
+                    })
             }
         }
     }

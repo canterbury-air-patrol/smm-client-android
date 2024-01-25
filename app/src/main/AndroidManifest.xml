@@ -17,7 +17,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Smmclientandroid">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,9 +28,12 @@
             android:name=".ui.activity.AssetSelectorActivity"
             android:label="AssetSelector"
             android:theme="@style/Theme.Smmclientandroid">
-
         </activity>
-
+        <activity
+            android:name=".ui.activity.AssetActivity"
+            android:label="Asset"
+            android:theme="@style/Theme.Smmclientandroid">
+        </activity>
     </application>
 
 </manifest>
