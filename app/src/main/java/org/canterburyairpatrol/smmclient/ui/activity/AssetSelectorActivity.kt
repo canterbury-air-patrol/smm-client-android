@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
 import org.canterburyairpatrol.smmclient.smm.SMMConnectionInstance
 import org.canterburyairpatrol.smmclient.smm.data.SMMAsset
+import org.canterburyairpatrol.smmclient.ui.theme.SmmclientandroidTheme
 
 class AssetSelectorActivity : ComponentActivity() {
     private var connectionDetails = SMMConnectionDetails("", "", "")
@@ -39,13 +40,15 @@ class AssetSelectorActivity : ComponentActivity() {
         }
 
         setContent {
-            // A surface container using the 'background' color from the theme
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Text(connectionDetails.username + "@" + connectionDetails.serverURL)
-                this.AssetSelector()
+            SmmclientandroidTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Text(connectionDetails.username + "@" + connectionDetails.serverURL)
+                    this.AssetSelector()
+                }
             }
         }
     }
