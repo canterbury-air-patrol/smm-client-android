@@ -4,15 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
+import org.canterburyairpatrol.smmclient.smm.SMMConnectionInstance
 import org.canterburyairpatrol.smmclient.smm.data.SMMAsset
+import org.canterburyairpatrol.smmclient.smm.data.SMMAssetCommand
+import org.canterburyairpatrol.smmclient.smm.data.SMMAssetDetails
 import org.canterburyairpatrol.smmclient.ui.theme.SmmclientandroidTheme
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 class AssetActivity : ComponentActivity() {
     private var connectionDetails = SMMConnectionDetails("", "", "")
@@ -46,19 +59,89 @@ class AssetActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    this.assetDetails()
+                    assetView(this.asset, this.connectionDetails)
                 }
             }
         }
     }
+}
 
-    @Composable
-    fun assetDetails() {
-        var asset = this.asset
-        var connectDetails = this.connectionDetails
-        Column {
-            Text("${connectDetails.username} @ ${connectDetails.serverURL}")
-            Text("${asset.name} (${asset.type_name})")
+@Composable
+fun assetView(asset: SMMAsset,
+              connectionDetails: SMMConnectionDetails) {
+
+    var assetDetails by remember { mutableStateOf(SMMAssetDetails(0, "", "", SMMAssetCommand("", "", "", "", 0.0, 0.0), 0, "", 0, 0)) }
+
+    LaunchedEffect(assetDetails) {
+        val api = (SMMConnectionInstance(connectionDetails).getAPI())
+        assetDetails = (api.getAssetDetails(asset.name))
+    }
+
+    Column(
+        Modifier.fillMaxWidth()
+    ) {
+        Row() {
+            assetDetails(asset, connectionDetails)
+        }
+        Row() {
+            assetMissionDetails(assetDetails)
+        }
+        Row() {
+            assetSearchDetails(assetDetails)
+        }
+        Row() {
+            assetInstructions(assetDetails.last_command)
+        }
+    }
+}
+
+@Composable
+fun assetDetails(asset: SMMAsset,
+                 connectionDetails: SMMConnectionDetails) {
+    Column {
+        Text("${connectionDetails.username} @ ${connectionDetails.serverURL}")
+        Text("${asset.name} (${asset.type_name})")
+    }
+}
+
+@Composable
+fun assetMissionDetails(assetDetails: SMMAssetDetails)
+{
+    Column {
+        Text("Current Mission: ${assetDetails.mission_name} (${assetDetails.mission_id})")
+    }
+}
+
+@Composable
+fun assetSearchDetails(assetDetails: SMMAssetDetails)
+{
+    Column {
+        Text("Current Search ${assetDetails.current_search_id}")
+        Text("Queued Search ${assetDetails.queued_search_id}")
+    }
+}
+
+@Composable
+fun assetInstructions(command: SMMAssetCommand)
+{
+    var timestamp: String = ""
+    try {
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        formatter.timeZone = TimeZone.getTimeZone("UTC")
+        val date = formatter.parse(command.issued)
+        val newFormatter = SimpleDateFormat("HH:mm dd-MM-yyyy")
+        newFormatter.timeZone = TimeZone.getDefault()
+        timestamp = newFormatter.format(date)
+    } catch (e: ParseException) {
+    }
+    Column {
+        Text("Issued: ${timestamp}")
+        Text("Instruction Type: ${command.action_txt}")
+        Text("Reason: ${command.reason}")
+        if (command.action == "GOTO")
+        {
+            Text("Latitude: ${command.latitude}")
+            Text("Longitude: ${command.longitude}")
         }
     }
 }
