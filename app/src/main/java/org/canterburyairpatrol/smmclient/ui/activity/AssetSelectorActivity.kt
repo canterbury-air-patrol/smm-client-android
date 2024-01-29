@@ -21,25 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
-import org.canterburyairpatrol.smmclient.smm.SMMConnectionInstance
+import org.canterburyairpatrol.smmclient.ConnectionSingleton
 import org.canterburyairpatrol.smmclient.smm.data.SMMAsset
 import org.canterburyairpatrol.smmclient.ui.theme.SmmclientandroidTheme
 
 class AssetSelectorActivity : ComponentActivity() {
-    private var connectionDetails = SMMConnectionDetails("", "", "")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val connectionSingleton = ConnectionSingleton.getInstance()
+        val connectionDetails = connectionSingleton.getConnectionDetails()
 
-        val receivedIntent = intent
-        if (receivedIntent != null && receivedIntent.hasExtra("connectionDetails"))
-        {
-            val receivedConnectionDetails = receivedIntent.getParcelableExtra<SMMConnectionDetails>("connectionDetails")
-            connectionDetails = SMMConnectionDetails(
-                receivedConnectionDetails?.serverURL ?: "",
-                receivedConnectionDetails?.username ?: "",
-                receivedConnectionDetails?.password ?: "")
-        }
 
         setContent {
             SmmclientandroidTheme {
@@ -68,7 +59,8 @@ class AssetSelectorActivity : ComponentActivity() {
         var assetList by remember { mutableStateOf(listOf<SMMAsset>()) }
 
         LaunchedEffect(assetList) {
-            val api = (SMMConnectionInstance(connectionDetails).getAPI())
+            val connectionSingleton = ConnectionSingleton.getInstance()
+            val api = connectionSingleton.getAPI()
             assetList = (api.getAssetsMine().assets)
         }
 
@@ -77,7 +69,6 @@ class AssetSelectorActivity : ComponentActivity() {
                 AssetListItem(asset = asset,
                     modifier = Modifier.clickable {
                         var intent = Intent(this@AssetSelectorActivity, AssetActivity::class.java)
-                        intent.putExtra("connectionDetails", connectionDetails)
                         intent.putExtra("assetDetails", asset)
                         startActivity(intent)
                     })

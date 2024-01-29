@@ -13,6 +13,11 @@ class ConnectionSingleton private constructor() {
         this.connectionDetails = details
     }
 
+    fun getConnectionDetails() : SMMConnectionDetails
+    {
+        return this.connectionDetails
+    }
+
     suspend fun connect() : String
     {
         try {
