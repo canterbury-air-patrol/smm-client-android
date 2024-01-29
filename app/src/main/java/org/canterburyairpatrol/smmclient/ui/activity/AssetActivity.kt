@@ -1,6 +1,8 @@
 package org.canterburyairpatrol.smmclient.ui.activity
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -11,12 +13,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
 import org.canterburyairpatrol.smmclient.smm.SMMConnectionInstance
 import org.canterburyairpatrol.smmclient.smm.data.SMMAsset
@@ -70,11 +80,44 @@ class AssetActivity : ComponentActivity() {
 fun assetView(asset: SMMAsset,
               connectionDetails: SMMConnectionDetails) {
 
+    val context = LocalContext.current as ComponentActivity
     var assetDetails by remember { mutableStateOf(SMMAssetDetails(0, "", "", SMMAssetCommand("", "", "", "", 0.0, 0.0), 0, "", 0, 0)) }
 
     LaunchedEffect(assetDetails) {
         val api = (SMMConnectionInstance(connectionDetails).getAPI())
         assetDetails = (api.getAssetDetails(asset.name))
+    }
+
+    DisposableEffect(Unit) {
+        val lifecycleObserver = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_DESTROY)
+            {
+                onDispose { }
+            }
+        }
+        val handler = Handler(Looper.getMainLooper())
+
+        val updateIntervalMillis = 10000L // 10s
+
+        val runnable = object : Runnable {
+            override fun run() {
+                GlobalScope.launch {
+                    withContext(Dispatchers.Main) {
+                        val api = (SMMConnectionInstance(connectionDetails).getAPI())
+                        assetDetails = (api.getAssetDetails(asset.name))
+                    }
+                }
+                handler.postDelayed(this, updateIntervalMillis)
+            }
+        }
+
+        context.lifecycle.addObserver(lifecycleObserver)
+        handler.postDelayed(runnable, updateIntervalMillis)
+
+        onDispose {
+            context.lifecycle.removeObserver(lifecycleObserver)
+            handler.removeCallbacks(runnable)
+        }
     }
 
     Column(
