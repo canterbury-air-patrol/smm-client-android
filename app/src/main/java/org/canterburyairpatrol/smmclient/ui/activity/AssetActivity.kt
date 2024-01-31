@@ -27,8 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
-import org.canterburyairpatrol.smmclient.smm.SMMConnectionInstance
+import org.canterburyairpatrol.smmclient.ConnectionSingleton
 import org.canterburyairpatrol.smmclient.smm.data.SMMAsset
 import org.canterburyairpatrol.smmclient.smm.data.SMMAssetCommand
 import org.canterburyairpatrol.smmclient.smm.data.SMMAssetDetails
@@ -38,20 +37,12 @@ import java.text.SimpleDateFormat
 import java.util.TimeZone
 
 class AssetActivity : ComponentActivity() {
-    private var connectionDetails = SMMConnectionDetails("", "", "")
     private var asset = SMMAsset(0, "", 0, "", "")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val receivedIntent = intent
-        if (receivedIntent != null && receivedIntent.hasExtra("connectionDetails")) {
-            val receivedConnectionDetails =
-                receivedIntent.getParcelableExtra<SMMConnectionDetails>("connectionDetails")
-            connectionDetails = SMMConnectionDetails(
-                receivedConnectionDetails?.serverURL ?: "",
-                receivedConnectionDetails?.username ?: "",
-                receivedConnectionDetails?.password ?: ""
-            )
+        if (receivedIntent != null && receivedIntent.hasExtra("assetDetails")) {
             val receivedAsset = receivedIntent.getParcelableExtra<SMMAsset>("assetDetails")
             asset = SMMAsset(
                 receivedAsset?.id ?: 0,
@@ -69,7 +60,7 @@ class AssetActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    assetView(this.asset, this.connectionDetails)
+                    assetView(this.asset)
                 }
             }
         }
@@ -77,15 +68,19 @@ class AssetActivity : ComponentActivity() {
 }
 
 @Composable
-fun assetView(asset: SMMAsset,
-              connectionDetails: SMMConnectionDetails) {
+fun assetView(asset: SMMAsset) {
 
     val context = LocalContext.current as ComponentActivity
     var assetDetails by remember { mutableStateOf(SMMAssetDetails(0, "", "", SMMAssetCommand("", "", "", "", 0.0, 0.0), 0, "", 0, 0)) }
 
-    LaunchedEffect(assetDetails) {
-        val api = (SMMConnectionInstance(connectionDetails).getAPI())
+    suspend fun updateAssetDetails() {
+        val connectionSingleton = ConnectionSingleton.getInstance()
+        val api = connectionSingleton.getAPI()
         assetDetails = (api.getAssetDetails(asset.name))
+    }
+
+    LaunchedEffect(assetDetails) {
+        updateAssetDetails()
     }
 
     DisposableEffect(Unit) {
@@ -103,8 +98,7 @@ fun assetView(asset: SMMAsset,
             override fun run() {
                 GlobalScope.launch {
                     withContext(Dispatchers.Main) {
-                        val api = (SMMConnectionInstance(connectionDetails).getAPI())
-                        assetDetails = (api.getAssetDetails(asset.name))
+                        updateAssetDetails()
                     }
                 }
                 handler.postDelayed(this, updateIntervalMillis)
@@ -124,7 +118,7 @@ fun assetView(asset: SMMAsset,
         Modifier.fillMaxWidth()
     ) {
         Row() {
-            assetDetails(asset, connectionDetails)
+            assetDetails(asset)
         }
         Row() {
             assetMissionDetails(assetDetails)
@@ -139,8 +133,9 @@ fun assetView(asset: SMMAsset,
 }
 
 @Composable
-fun assetDetails(asset: SMMAsset,
-                 connectionDetails: SMMConnectionDetails) {
+fun assetDetails(asset: SMMAsset) {
+    val connectionSingleton = ConnectionSingleton.getInstance()
+    val connectionDetails = connectionSingleton.getConnectionDetails()
     Column {
         Text("${connectionDetails.username} @ ${connectionDetails.serverURL}")
         Text("${asset.name} (${asset.type_name})")

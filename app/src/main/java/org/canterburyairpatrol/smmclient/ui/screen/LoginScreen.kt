@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.canterburyairpatrol.smmclient.ConnectionSingleton
 import org.canterburyairpatrol.smmclient.R
 import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
 import org.canterburyairpatrol.smmclient.ui.activity.AssetSelectorActivity
@@ -29,6 +32,7 @@ class LoginScreen(private val context: Context) {
     @Composable
     fun Content(onLoginSuccess: () -> Unit) {
         var connectionDetails by remember { mutableStateOf(SMMConnectionDetails("", "", "")) }
+        var errorMessage by remember { mutableStateOf("") }
 
         Column(modifier = Modifier.fillMaxSize()) {
             OutlinedTextField(
@@ -59,15 +63,20 @@ class LoginScreen(private val context: Context) {
                 singleLine = true
             )
             Button(onClick = {
-                // Perform login logic here
-                // For simplicity, assume successful login
-                val intent = Intent(context, AssetSelectorActivity::class.java)
-                intent.putExtra("connectionDetails", connectionDetails)
-                context.startActivity(intent)
-                onLoginSuccess.invoke()
+                GlobalScope.launch {
+                    var connection = ConnectionSingleton.getInstance()
+                    connection.setConnectionDetails(connectionDetails)
+                    errorMessage = connection.connect()
+                    if (errorMessage == "") {
+                        var intent = Intent(context, AssetSelectorActivity::class.java)
+                        context.startActivity(intent)
+                        onLoginSuccess.invoke()
+                    }
+                }
             }) {
                 Text(stringResource(id = R.string.connect))
             }
+            Text(errorMessage)
         }
     }
 }
