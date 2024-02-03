@@ -24,4 +24,14 @@ interface SMMAPI {
 
     @GET("assets/{assetName}/details/")
     suspend fun getAssetDetails(@Path(value = "assetName") assetName: String): SMMAssetDetails
+
+    @POST("data/assets/{assetName}/position/add/")
+    @FormUrlEncoded
+    suspend fun sendAssetPosition(
+        @Path(value = "assetName") assetName: String,
+        @Field("lat") latitude: Double,
+        @Field("lon") longitude: Double,
+        @Field("fix") fix: Int,
+        @Field("alt") altitude: Int,
+        @Field("heading") heading: Int)
 }
