@@ -11,5 +11,6 @@
 ** You should see a list assets associated with your account
 ** Select the Assest you wish to act as
 * On the asset screen:
-
+** Tap the 'Start Tracking' button to enable tracking as the asset you have selected, you will need to give the app permission to access your location.
+** Tap the 'Stop' button to disable tracking
 ## Advanced
