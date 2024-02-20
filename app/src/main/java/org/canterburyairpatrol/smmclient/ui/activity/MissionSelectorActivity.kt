@@ -23,12 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.canterburyairpatrol.smmclient.ConnectionSingleton
-import org.canterburyairpatrol.smmclient.smm.data.SMMAsset
+import org.canterburyairpatrol.smmclient.smm.data.SMMMission
 import org.canterburyairpatrol.smmclient.ui.theme.SmmclientandroidTheme
 
-class AssetSelectorActivity : ComponentActivity() {
+class MissionSelectorActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val connectionSingleton = ConnectionSingleton.getInstance()
@@ -48,13 +49,13 @@ class AssetSelectorActivity : ComponentActivity() {
                         }
                         Row {
                             Button(onClick = {
-                                startActivity(Intent(this@AssetSelectorActivity, MissionSelectorActivity::class.java))
+                                startActivity(Intent(this@MissionSelectorActivity, AssetSelectorActivity::class.java))
                             }) {
-                                Text("Missions")
+                                Text("Assets")
                             }
                         }
-                        Row {
-                            this@AssetSelectorActivity.AssetSelector()
+                        Row (Modifier.weight(1f).align(Alignment.Start)) {
+                            this@MissionSelectorActivity.MissionSelector()
                         }
                     }
                 }
@@ -64,28 +65,28 @@ class AssetSelectorActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun AssetListItem(asset: SMMAsset, modifier: Modifier) {
+    fun MissionListItem(mission: SMMMission, modifier: Modifier) {
         ListItem(
-            headlineContent = { Text(asset.name) },
+            headlineContent = { Text("" + mission.id + " " + mission.name) },
             modifier = modifier.fillMaxWidth()
         )
     }
     @Composable
-    fun AssetSelector() {
-        var assetList by remember { mutableStateOf(listOf<SMMAsset>()) }
+    fun MissionSelector() {
+        var missionList by remember { mutableStateOf(listOf<SMMMission>()) }
 
-        LaunchedEffect(assetList) {
+        LaunchedEffect(missionList) {
             val connectionSingleton = ConnectionSingleton.getInstance()
             val api = connectionSingleton.getAPI()
-            assetList = (api.getAssetsMine().assets)
+            missionList = (api.getMissionsActive().missions)
         }
 
         LazyColumn {
-            items(assetList) { asset ->
-                AssetListItem(asset = asset,
+            items(missionList) { mission ->
+                MissionListItem(mission = mission,
                     modifier = Modifier.clickable {
-                        var intent = Intent(this@AssetSelectorActivity, AssetActivity::class.java)
-                        intent.putExtra("assetDetails", asset)
+                        var intent = Intent(this@MissionSelectorActivity, MissionActivity::class.java)
+                        intent.putExtra("missionDetails", mission)
                         startActivity(intent)
                     })
             }

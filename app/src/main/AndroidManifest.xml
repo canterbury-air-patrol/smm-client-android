@@ -37,6 +37,16 @@
             android:label="Asset"
             android:theme="@style/Theme.Smmclientandroid">
         </activity>
+        <activity
+            android:name=".ui.activity.MissionSelectorActivity"
+            android:label="MissionSelector"
+            android:theme="@style/Theme.Smmclientandroid">
+        </activity>
+        <activity
+            android:name=".ui.activity.MissionActivity"
+            android:label="Mission"
+            android:theme="@style/Theme.Smmclientandroid">
+        </activity>
     </application>
 
 </manifest>
