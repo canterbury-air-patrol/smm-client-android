@@ -22,13 +22,13 @@ interface SMMAPI {
     @GET("assets/mine/json/")
     suspend fun getAssetsMine(): SMMAssetResponse
 
-    @GET("assets/{assetName}/details/")
-    suspend fun getAssetDetails(@Path(value = "assetName") assetName: String): SMMAssetDetails
+    @GET("assets/{assetId}/details/")
+    suspend fun getAssetDetails(@Path(value = "assetId") assetId: Int): SMMAssetDetails
 
-    @POST("data/assets/{assetName}/position/add/")
+    @POST("data/assets/{assetId}/position/add/")
     @FormUrlEncoded
     suspend fun sendAssetPosition(
-        @Path(value = "assetName") assetName: String,
+        @Path(value = "assetId") assetName: Int,
         @Field("lat") latitude: Double,
         @Field("lon") longitude: Double,
         @Field("fix") fix: Int,
