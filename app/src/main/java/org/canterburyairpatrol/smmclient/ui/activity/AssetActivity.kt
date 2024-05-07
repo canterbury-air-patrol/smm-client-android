@@ -187,7 +187,7 @@ class AssetActivity : ComponentActivity() {
                                             val api = connectionSingleton.getAPI()
                                             GlobalScope.launch {
                                                 api.sendAssetPosition(
-                                                    asset.name,
+                                                    asset.id,
                                                     location.latitude,
                                                     location.longitude,
                                                     (if (location.hasAltitude()) 3 else 2),
@@ -223,7 +223,7 @@ fun assetView(asset: SMMAsset) {
     suspend fun updateAssetDetails() {
         val connectionSingleton = ConnectionSingleton.getInstance()
         val api = connectionSingleton.getAPI()
-        assetDetails = (api.getAssetDetails(asset.name))
+        assetDetails = (api.getAssetDetails(asset.id))
     }
 
     LaunchedEffect(assetDetails) {
