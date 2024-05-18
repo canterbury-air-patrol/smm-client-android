@@ -38,4 +38,15 @@ interface SMMAPI {
 
     @GET("mission/list/?only=active")
     suspend fun getMissionsActive(): SMMMissionResponse
+
+    @POST("mission/{missionId}/data/user/{userName}/position/add/")
+    @FormUrlEncoded
+    suspend fun sendUserMissionPosition(
+        @Path(value = "missionId") missionId: Int,
+        @Path(value = "userName") username: String,
+        @Field("lat") latitude: Double,
+        @Field("lon") longitude: Double,
+        @Field("fix") fix: Int,
+        @Field("alt") altitude: Int,
+        @Field("heading") heading: Int)
 }
