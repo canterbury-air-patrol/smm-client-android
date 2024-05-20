@@ -28,18 +28,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.AssetSelectorActivity"
-            android:label="AssetSelector"
+            android:name=".ui.activity.MainSelectorActivity"
+            android:label="MainSelector"
             android:theme="@style/Theme.Smmclientandroid">
         </activity>
         <activity
             android:name=".ui.activity.AssetActivity"
             android:label="Asset"
-            android:theme="@style/Theme.Smmclientandroid">
-        </activity>
-        <activity
-            android:name=".ui.activity.MissionSelectorActivity"
-            android:label="MissionSelector"
             android:theme="@style/Theme.Smmclientandroid">
         </activity>
         <activity
