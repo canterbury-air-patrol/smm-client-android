@@ -4,4 +4,6 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="connect">Connect</string>
+    <string name="remember_login_details">Remember Login</string>
+    <string name="forget_login_details">Forget Login Details</string>
 </resources>
