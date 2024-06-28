@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.canterburyairpatrol.smmclient.ConnectionSingleton
 import org.canterburyairpatrol.smmclient.R
 import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
-import org.canterburyairpatrol.smmclient.ui.activity.AssetSelectorActivity
+import org.canterburyairpatrol.smmclient.ui.activity.MainSelectorActivity
 
 class LoginScreen(private val context: Context) {
 
@@ -116,7 +116,7 @@ class LoginScreen(private val context: Context) {
                                 }
                                 editor.putBoolean("rememberLogin", saveDetails)
                                 editor.commit()
-                                var intent = Intent(context, AssetSelectorActivity::class.java)
+                                var intent = Intent(context, MainSelectorActivity::class.java)
                                 context.startActivity(intent)
                                 onLoginSuccess.invoke()
                             }

@@ -6,4 +6,7 @@
     <string name="connect">Connect</string>
     <string name="remember_login_details">Remember Login</string>
     <string name="forget_login_details">Forget Login Details</string>
+    <string name="assets">Assets</string>
+    <string name="missions">Missions</string>
+    <string name="logout">Logout</string>
 </resources>
