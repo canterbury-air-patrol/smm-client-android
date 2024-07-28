@@ -6,6 +6,7 @@ import org.canterburyairpatrol.smmclient.smm.data.SMMMissionResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -20,10 +21,12 @@ interface SMMAPI {
     @GET("accounts/login/")
     suspend fun getLoginPage()
 
-    @GET("assets/mine/json/")
+    @Headers("Accept: application/json")
+    @GET("assets/")
     suspend fun getAssetsMine(): SMMAssetResponse
 
-    @GET("assets/{assetId}/details/")
+    @Headers("Accept: application/json")
+    @GET("assets/{assetId}/")
     suspend fun getAssetDetails(@Path(value = "assetId") assetId: Int): SMMAssetDetails
 
     @POST("data/assets/{assetId}/position/add/")
