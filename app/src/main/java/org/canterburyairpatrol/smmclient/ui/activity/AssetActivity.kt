@@ -90,8 +90,9 @@ class AssetActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val receivedIntent = intent
-        if (receivedIntent != null && receivedIntent.hasExtra("assetDetails")) {
-            val receivedAsset = receivedIntent.getParcelableExtra<SMMAsset>("assetDetails")
+        if (receivedIntent != null && receivedIntent.hasExtra("bundle")) {
+            val bundle = receivedIntent.getBundleExtra("bundle")
+            val receivedAsset = bundle?.getParcelable<SMMAsset>("assetDetails")
             asset = SMMAsset(
                 receivedAsset?.id ?: 0,
                 receivedAsset?.name ?: "",
