@@ -1,9 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    extra.apply {
-        set("retrofit_version", "2.11.0")
-        set("okhttp_version", "4.12.0")
-    }
 }
 
 plugins {
