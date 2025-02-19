@@ -124,7 +124,9 @@ class MainSelectorActivity : ComponentActivity() {
                 AssetListItem(asset = asset,
                     modifier = Modifier.clickable {
                         var intent = Intent(this@MainSelectorActivity, AssetActivity::class.java)
-                        intent.putExtra("assetDetails", asset)
+                        var bundle = Bundle()
+                        bundle.putParcelable("assetDetails", asset)
+                        intent.putExtra("bundle", bundle)
                         startActivity(intent)
                     })
             }
