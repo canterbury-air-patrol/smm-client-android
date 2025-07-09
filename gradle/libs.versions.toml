@@ -10,7 +10,7 @@ preferences = "1.2.1"
 junit-ext = "1.1.5"
 espresso-core = "3.3.0"
 
-play-services-location = "21.2.0"
+play-services-location = "21.3.0"
 
 junit = "4.13.2"
 
