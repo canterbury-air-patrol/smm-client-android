@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -111,8 +111,8 @@ class AssetActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        assetView(this@AssetActivity.asset)
-                        positionTracker()
+                        AssetView(this@AssetActivity.asset)
+                        PositionTracker()
                     }
                 }
             }
@@ -120,7 +120,7 @@ class AssetActivity : ComponentActivity() {
     }
 
     @Composable
-    fun positionTracker()
+    fun PositionTracker()
     {
         var currentLat by remember { mutableStateOf("unknown") }
         var currentLon by remember { mutableStateOf("unknown") }
@@ -216,9 +216,9 @@ class AssetActivity : ComponentActivity() {
 }
 
 @Composable
-fun assetView(asset: SMMAsset) {
+fun AssetView(asset: SMMAsset) {
 
-    val context = LocalContext.current as ComponentActivity
+    val context = LocalActivity.current as ComponentActivity
     var assetDetails by remember { mutableStateOf(SMMAssetDetails(0, "", "", SMMAssetCommand("", "", "", "", 0.0, 0.0), 0, "", 0, 0)) }
 
     suspend fun updateAssetDetails() {
@@ -266,22 +266,22 @@ fun assetView(asset: SMMAsset) {
         Modifier.fillMaxWidth()
     ) {
         Row() {
-            assetDetails(asset)
+            AssetDetails(asset)
         }
         Row() {
-            assetMissionDetails(assetDetails)
+            AssetMissionDetails(assetDetails)
         }
         Row() {
-            assetSearchDetails(assetDetails)
+            AssetSearchDetails(assetDetails)
         }
         Row() {
-            assetInstructions(assetDetails.last_command)
+            AssetInstructions(assetDetails.last_command)
         }
     }
 }
 
 @Composable
-fun assetDetails(asset: SMMAsset) {
+fun AssetDetails(asset: SMMAsset) {
     val connectionSingleton = ConnectionSingleton.getInstance()
     val connectionDetails = connectionSingleton.getConnectionDetails()
     Column {
@@ -291,7 +291,7 @@ fun assetDetails(asset: SMMAsset) {
 }
 
 @Composable
-fun assetMissionDetails(assetDetails: SMMAssetDetails)
+fun AssetMissionDetails(assetDetails: SMMAssetDetails)
 {
     Column {
         Text("Current Mission: ${assetDetails.mission_name} (${assetDetails.mission_id})")
@@ -299,7 +299,7 @@ fun assetMissionDetails(assetDetails: SMMAssetDetails)
 }
 
 @Composable
-fun assetSearchDetails(assetDetails: SMMAssetDetails)
+fun AssetSearchDetails(assetDetails: SMMAssetDetails)
 {
     Column {
         Text("Current Search ${assetDetails.current_search_id}")
@@ -308,7 +308,7 @@ fun assetSearchDetails(assetDetails: SMMAssetDetails)
 }
 
 @Composable
-fun assetInstructions(command: SMMAssetCommand)
+fun AssetInstructions(command: SMMAssetCommand)
 {
     var timestamp: String = ""
     try {

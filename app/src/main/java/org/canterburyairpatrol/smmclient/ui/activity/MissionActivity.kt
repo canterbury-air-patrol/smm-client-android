@@ -63,8 +63,8 @@ class MissionActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        missionView(this@MissionActivity.mission)
-                        positionTracker()
+                        MissionView(this@MissionActivity.mission)
+                        PositionTracker()
                     }
                 }
             }
@@ -72,7 +72,7 @@ class MissionActivity : ComponentActivity() {
     }
 
     @Composable
-    fun positionTracker() {
+    fun PositionTracker() {
         var currentLat by remember { mutableStateOf("unknown") }
         var currentLon by remember { mutableStateOf("unknown") }
         var tracking by remember { mutableStateOf(false) }
@@ -165,7 +165,7 @@ class MissionActivity : ComponentActivity() {
 }
 
 @Composable
-fun missionView(mission: SMMMission) {
+fun MissionView(mission: SMMMission) {
     Column(
         Modifier.fillMaxWidth()
     ) {

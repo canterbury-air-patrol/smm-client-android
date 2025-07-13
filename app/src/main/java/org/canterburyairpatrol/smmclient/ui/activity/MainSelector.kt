@@ -55,7 +55,7 @@ class MainSelectorActivity : ComponentActivity() {
                             Modifier
                                 .weight(1f)
                                 .align(Alignment.Start)) {
-                            this@MainSelectorActivity.mainContent()
+                            this@MainSelectorActivity.MainContent()
                         }
                     }
                 }
@@ -64,7 +64,7 @@ class MainSelectorActivity : ComponentActivity() {
     }
 
     @Composable
-    fun mainContent()
+    fun MainContent()
     {
         var assets by remember { mutableStateOf(true) }
 
