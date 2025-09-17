@@ -3,6 +3,7 @@ package org.canterburyairpatrol.smmclient.smm
 import org.canterburyairpatrol.smmclient.smm.data.SMMAssetDetails
 import org.canterburyairpatrol.smmclient.smm.data.SMMAssetResponse
 import org.canterburyairpatrol.smmclient.smm.data.SMMMissionResponse
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -16,7 +17,7 @@ interface SMMAPI {
     suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
-    )
+    ): Response<Unit>
 
     @GET("accounts/login/")
     suspend fun getLoginPage()

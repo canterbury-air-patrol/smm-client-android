@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import org.canterburyairpatrol.smmclient.data.SMMConnectionDetails
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.net.CookieStore
@@ -29,6 +30,7 @@ class SMMConnectionInstance {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         val okHttpClient = OkHttpClient.Builder()
+            .followRedirects(false)
             .cookieJar(JavaNetCookieJar(cookieManager))
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -49,8 +51,16 @@ class SMMConnectionInstance {
     {
         if (!this.loggedIn) {
             this.api.getLoginPage()
-            this.api.login(this.connectionDetails.username, this.connectionDetails.password)
-            this.loggedIn = true
+            try {
+                var result = this.api.login(this.connectionDetails.username, this.connectionDetails.password)
+                if (result.code() == 302) {
+                    this.loggedIn = true
+                } else {
+                    throw Exception("Login failed")
+                }
+            } catch (e: IOException) {
+                throw Exception("Communication error: ${e.message}", e)
+            }
         }
         return this.api
     }
