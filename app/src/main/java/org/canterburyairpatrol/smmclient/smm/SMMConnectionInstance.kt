@@ -18,7 +18,7 @@ fun getCookieByName(store: CookieStore, name: String): HttpCookie? {
             return cookie
         }
     }
-    return null;
+    return null
 }
 class SMMConnectionInstance {
     private val api: SMMAPI
@@ -52,7 +52,7 @@ class SMMConnectionInstance {
         if (!this.loggedIn) {
             this.api.getLoginPage()
             try {
-                var result = this.api.login(this.connectionDetails.username, this.connectionDetails.password)
+                val result = this.api.login(this.connectionDetails.username, this.connectionDetails.password)
                 if (result.code() == 302) {
                     this.loggedIn = true
                 } else {

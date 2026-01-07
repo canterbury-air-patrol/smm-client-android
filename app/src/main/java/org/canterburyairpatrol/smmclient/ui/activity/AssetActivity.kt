@@ -125,7 +125,7 @@ class AssetActivity : ComponentActivity() {
         var currentLat by remember { mutableStateOf("unknown") }
         var currentLon by remember { mutableStateOf("unknown") }
         var tracking by remember { mutableStateOf(false) }
-        Column () {
+        Column {
             if (tracking)
             {
                 Button(onClick = {
@@ -134,7 +134,7 @@ class AssetActivity : ComponentActivity() {
                 }) {
                     Text("Stop")
                 }
-                Row() {
+                Row {
                     Text("Lon: $currentLon, ")
                     Text("Lat: $currentLat")
                 }
@@ -176,7 +176,7 @@ class AssetActivity : ComponentActivity() {
                                 ) {
                                     return
                                 }
-                                var fusedLocationClient =
+                                val fusedLocationClient =
                                     LocationServices.getFusedLocationProviderClient(this@AssetActivity)
                                 fusedLocationClient.lastLocation.addOnCompleteListener(this@AssetActivity,
                                     OnCompleteListener { task: Task<Location?> ->
@@ -265,16 +265,16 @@ fun AssetView(asset: SMMAsset) {
     Column(
         Modifier.fillMaxWidth()
     ) {
-        Row() {
+        Row {
             AssetDetails(asset)
         }
-        Row() {
+        Row {
             AssetMissionDetails(assetDetails)
         }
-        Row() {
+        Row {
             AssetSearchDetails(assetDetails)
         }
-        Row() {
+        Row {
             AssetInstructions(assetDetails.last_command)
         }
     }
@@ -310,7 +310,7 @@ fun AssetSearchDetails(assetDetails: SMMAssetDetails)
 @Composable
 fun AssetInstructions(command: SMMAssetCommand)
 {
-    var timestamp: String = ""
+    var timestamp = ""
     try {
         val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         formatter.timeZone = TimeZone.getTimeZone("UTC")
