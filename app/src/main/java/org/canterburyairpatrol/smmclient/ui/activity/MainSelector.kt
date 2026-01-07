@@ -123,8 +123,8 @@ class MainSelectorActivity : ComponentActivity() {
             items(assetList) { asset ->
                 AssetListItem(asset = asset,
                     modifier = Modifier.clickable {
-                        var intent = Intent(this@MainSelectorActivity, AssetActivity::class.java)
-                        var bundle = Bundle()
+                        val intent = Intent(this@MainSelectorActivity, AssetActivity::class.java)
+                        val bundle = Bundle()
                         bundle.putParcelable("assetDetails", asset)
                         intent.putExtra("bundle", bundle)
                         startActivity(intent)
@@ -154,7 +154,7 @@ class MainSelectorActivity : ComponentActivity() {
             items(missionList) { mission ->
                 MissionListItem(mission = mission,
                     modifier = Modifier.clickable {
-                        var intent = Intent(this@MainSelectorActivity, MissionActivity::class.java)
+                        val intent = Intent(this@MainSelectorActivity, MissionActivity::class.java)
                         intent.putExtra("missionDetails", mission)
                         startActivity(intent)
                     })

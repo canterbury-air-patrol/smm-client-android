@@ -76,7 +76,7 @@ class MissionActivity : ComponentActivity() {
         var currentLat by remember { mutableStateOf("unknown") }
         var currentLon by remember { mutableStateOf("unknown") }
         var tracking by remember { mutableStateOf(false) }
-        Column() {
+        Column {
             if (tracking) {
                 Button(onClick = {
                     handler.removeCallbacks(locationRunnable)
@@ -84,7 +84,7 @@ class MissionActivity : ComponentActivity() {
                 }) {
                     Text("Stop")
                 }
-                Row() {
+                Row {
                     Text("Lon: $currentLon, ")
                     Text("Lat: $currentLat")
                 }
@@ -123,7 +123,7 @@ class MissionActivity : ComponentActivity() {
                                 ) {
                                     return
                                 }
-                                var fusedLocationClient =
+                                val fusedLocationClient =
                                     LocationServices.getFusedLocationProviderClient(this@MissionActivity)
                                 fusedLocationClient.lastLocation.addOnCompleteListener(this@MissionActivity,
                                     OnCompleteListener { task: Task<Location?> ->
@@ -169,10 +169,10 @@ fun MissionView(mission: SMMMission) {
     Column(
         Modifier.fillMaxWidth()
     ) {
-        Row() {
+        Row {
             Text("Mission: ${mission.name}")
         }
-        Row() {
+        Row {
             Text("Description: ${mission.description}")
         }
     }
