@@ -1,5 +1,5 @@
 [versions]
-application = "8.13.2"
+application = "9.1.1"
 kotlin = "2.2.21"
 
 ktx = "1.17.0"
