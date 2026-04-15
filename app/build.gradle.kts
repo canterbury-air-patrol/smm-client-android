@@ -54,8 +54,10 @@ extensions.configure<ApplicationExtension> {
 
 dependencies {
     implementation(libs.androidx.ktx)
-    implementation(libs.androidx.lifecycle)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.security.crypto)
 
     implementation(platform(libs.androidx.compose))
     implementation(libs.androidx.compose.ui)
